@@ -1,25 +1,28 @@
 const express = require('express');
-const helmet = require('helmet');
-const bodyParser = require('body-parser');
-const path = require('path');
-const apiRouter = require('./routes/index'); 
+const dotenv = require('dotenv');
+const cookieParser = require('cookie-parser');
+const authRoutes = require('./routes/auth.routes.js'); 
+const messageRoutes = require('./routes/message.routes.js'); 
+const userRoutes = require('./routes/user.routes.js'); 
+const connectToMongoDB = require('./db/connectToMongoDB.js');
+const { app, server } = require('./socket/socket.js'); 
 
+dotenv.config();
 
-const app = express();
-app.use(helmet.frameguard());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+const PORT = process.env.PORT || 5000;
 
-app.use('/api', apiRouter); 
+app.use(express.json());
+app.use(cookieParser());
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('client/build'));
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-  });
-}
+app.use("/api/auth", authRoutes);
+app.use("/api/messages", messageRoutes);
+app.use("/api/users", userRoutes);
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
+app.get("/", (req, res) => {
+  res.send("Hello World!!");
+});
+
+server.listen(PORT, () => {
+  connectToMongoDB();
+  console.log(`Server Running on port ${PORT}`);
 });
