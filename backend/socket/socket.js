@@ -1,46 +1,38 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
-import { useAuthContext } from "./AuthContext";
-import io from "socket.io-client";
+import { Server } from "socket.io";
+import http from "http";
+import express from "express";
 
-const SocketContext = createContext();
+const app = express();
 
-export const useSocketContext = () => {
-    return useContext(SocketContext);
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: ["http://localhost:3000"],
+        methods: ["GET", "POST"],
+    },
+});
+
+export const getReceiverSocketId = (receiverId) => {
+    return userSocketMap[receiverId];
 };
 
-export const SocketContextProvider = ({ children }) => {
-    const { authUser } = useAuthContext();
-    const [socket, setSocket] = useState(null);
-    const [onlineUsers, setOnlineUsers] = useState([]);
+const userSocketMap = {}; // {userId: socketId}
 
-    useEffect(() => {
-        if (authUser) {
-            const newSocket = io("https://chat-app.onrender.com", {
-                query: {
-                    userId: authUser._id,
-                },
-            });
+io.on("connection", (socket) => {
+    console.log("a user connected", socket.id);
 
-            setSocket(newSocket);
+    const userId = socket.handshake.query.userId;
+    if (userId != "undefined") userSocketMap[userId] = socket.id;
 
-            newSocket.on("getOnlineUsers", (users) => {
-                setOnlineUsers(users);
-            });
+    // io.emit() is used to send events to all the connected clients
+    io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
-            return () => {
-                newSocket.close();
-            };
-        } else {
-            if (socket) {
-                socket.close();
-                setSocket(null);
-            }
-        }
-    }, [authUser]);
+    // socket.on() is used to listen to the events. can be used both on client and server side
+    socket.on("disconnect", () => {
+        console.log("user disconnected", socket.id);
+        delete userSocketMap[userId];
+        io.emit("getOnlineUsers", Object.keys(userSocketMap));
+    });
+});
 
-    return (
-        <SocketContext.Provider value={{ socket, onlineUsers }}>
-            {children}
-        </SocketContext.Provider>
-    );
-};
+export { app, io, server };
