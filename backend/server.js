@@ -15,7 +15,13 @@ const PORT = process.env.PORT || 5000;
 
 const __dirname = path.resolve();
 
-app.use(cors());
+// Allow requests from specific origins
+const corsOptions = {
+    origin: "https://chat-app-phxe.onrender.com",
+    methods: ["GET", "POST"],
+};
+
+app.use(cors(corsOptions));
 
 dotenv.config();
 

@@ -1,38 +1,46 @@
-import { Server } from "socket.io";
-import http from "http";
-import express from "express";
+import React, { createContext, useState, useEffect, useContext } from "react";
+import { useAuthContext } from "./AuthContext";
+import io from "socket.io-client";
 
-const app = express();
+const SocketContext = createContext();
 
-const server = http.createServer(app);
-const io = new Server(server, {
-    cors: {
-        origin: ["http://localhost:3000"],
-        methods: ["GET", "POST"],
-    },
-});
-
-export const getReceiverSocketId = (receiverId) => {
-    return userSocketMap[receiverId];
+export const useSocketContext = () => {
+    return useContext(SocketContext);
 };
 
-const userSocketMap = {}; // {userId: socketId}
+export const SocketContextProvider = ({ children }) => {
+    const { authUser } = useAuthContext();
+    const [socket, setSocket] = useState(null);
+    const [onlineUsers, setOnlineUsers] = useState([]);
 
-io.on("connection", (socket) => {
-    console.log("a user connected", socket.id);
+    useEffect(() => {
+        if (authUser) {
+            const newSocket = io("https://chat-app.onrender.com", {
+                query: {
+                    userId: authUser._id,
+                },
+            });
 
-    const userId = socket.handshake.query.userId;
-    if (userId != "undefined") userSocketMap[userId] = socket.id;
+            setSocket(newSocket);
 
-    // io.emit() is used to send events to all the connected clients
-    io.emit("getOnlineUsers", Object.keys(userSocketMap));
+            newSocket.on("getOnlineUsers", (users) => {
+                setOnlineUsers(users);
+            });
 
-    // socket.on() is used to listen to the events. can be used both on client and server side
-    socket.on("disconnect", () => {
-        console.log("user disconnected", socket.id);
-        delete userSocketMap[userId];
-        io.emit("getOnlineUsers", Object.keys(userSocketMap));
-    });
-});
+            return () => {
+                newSocket.close();
+            };
+        } else {
+            if (socket) {
+                socket.close();
+                setSocket(null);
+            }
+        }
+    }, [authUser]);
 
-export { app, io, server };
+    return (
+        <SocketContext.Provider value={{ socket, onlineUsers }}>
+            {children}
+        </SocketContext.Provider>
+    );
+};
