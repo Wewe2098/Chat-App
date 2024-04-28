@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 5000;
 const __dirname = path.resolve();
 
 app.use(cors({
-  origin: "https://chat-app.onrender.com"
+	origin: "https://chat-app-phxe.onrender.com"
 }));
 
 dotenv.config();
