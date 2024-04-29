@@ -2,6 +2,7 @@ import path from "path";
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+const cors = require('cors');
 
 import authRoutes from "./routes/auth.routes.js";
 import messageRoutes from "./routes/message.routes.js";
@@ -11,6 +12,14 @@ import connectToMongoDB from "./db/connectToMongoDB.js";
 import { app, server } from "./socket/socket.js";
 
 dotenv.config();
+
+const corsOptions = {
+  origin: 'https://chat-app-phxe.onrender.com', // Allow requests from this origin
+  methods: ['GET', 'POST'], // Allow these HTTP methods
+};
+
+app.use(cors(corsOptions));
+
 
 const __dirname = path.resolve();
 // PORT should be assigned after calling dotenv.config() because we need to access the env variables. Didn't realize while recording the video. Sorry for the confusion.
