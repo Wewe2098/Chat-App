@@ -9,7 +9,7 @@ const useGetConversations = () => {
 		const getConversations = async () => {
 			setLoading(true);
 			try {
-				const res = await fetch("https://chat-app-phxe.onrender.com/api/users");
+				const res = await fetch("/api/users");
 				const data = await res.json();
 				if (data.error) {
 					throw new Error(data.error);
@@ -28,4 +28,3 @@ const useGetConversations = () => {
 	return { loading, conversations };
 };
 export default useGetConversations;
-
