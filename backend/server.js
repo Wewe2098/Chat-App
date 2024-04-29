@@ -14,8 +14,8 @@ import { app, server } from "./socket/socket.js";
 dotenv.config();
 
 const corsOptions = {
-  origin: 'https://chat-app-phxe.onrender.com', // Allow requests from this origin
-  methods: ['GET', 'POST'], // Allow these HTTP methods
+  origin: 'https://chat-app-phxe.onrender.com', 
+  methods: ['GET', 'POST'], 
 };
 
 app.use(cors(corsOptions));
