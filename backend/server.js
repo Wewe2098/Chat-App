@@ -18,7 +18,7 @@ const __dirname = path.resolve();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: "https://chat-app-phxe.onrender.com",
   credentials: true // This allows cookies to be sent with the request
 }));
 
