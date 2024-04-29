@@ -2,7 +2,6 @@ import path from "path";
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-import cors from "cors";
 
 import authRoutes from "./routes/auth.routes.js";
 import messageRoutes from "./routes/message.routes.js";
@@ -16,11 +15,6 @@ dotenv.config();
 const __dirname = path.resolve();
 // PORT should be assigned after calling dotenv.config() because we need to access the env variables. Didn't realize while recording the video. Sorry for the confusion.
 const PORT = process.env.PORT || 5000;
-
-app.use(cors({
-  origin: "https://chat-app-phxe.onrender.com",
-  credentials: true // This allows cookies to be sent with the request
-}));
 
 
 app.use(express.json()); // to parse the incoming requests with JSON payloads (from req.body)
