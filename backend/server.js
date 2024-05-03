@@ -13,11 +13,7 @@ import { app, server } from "./socket/socket.js";
 
 dotenv.config();
 
-const app = express();
-
-app.use(cors({
-	origin: "https://chat-app-phxe.onrender.com"
-  }));
+app.use(cors());
 
 const __dirname = path.resolve();
 // PORT should be assigned after calling dotenv.config() because we need to access the env variables. Didn't realize while recording the video. Sorry for the confusion.
