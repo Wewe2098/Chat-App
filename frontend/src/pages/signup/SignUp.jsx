@@ -105,6 +105,8 @@ const SignUp = () => {
 };
 export default SignUp;
 
+
+
 // STARTER CODE FOR THE SIGNUP COMPONENT
 // import GenderCheckbox from "./GenderCheckbox";
 

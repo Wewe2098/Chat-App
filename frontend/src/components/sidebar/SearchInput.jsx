@@ -40,6 +40,8 @@ const SearchInput = () => {
 };
 export default SearchInput;
 
+
+
 // STARTER CODE SNIPPET
 // import { IoSearchSharp } from "react-icons/io5";
 

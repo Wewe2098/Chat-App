@@ -43,3 +43,4 @@ function handleInputErrors(username, password) {
 
 	return true;
 }
+
