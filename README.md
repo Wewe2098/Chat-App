@@ -1,13 +1,13 @@
 My Chat-App
 
+You can run npm start form Chat-App without going to the backend or frontend just inside the main folder 
+
 Github link: https://github.com/Wewe2098/Chat-App
 
 My App link: https://chat-app-phxe.onrender.com/
 
-you can run npm start from the Chat-App without going to each folder.
 
-
-    I used XD for wireframing and it's not a lot of frames since I'll be creating a chatting app
+I used XD for wireframing and it's not a lot of frames since I'll be creating a chatting app
     
     Frontend:
         How it looks: We'll use Create React App to build how the website looks and behaves and Vito.
@@ -30,7 +30,7 @@ How it works
 *the more people that sign up the more people you'll see on your contacts.
 *you can start chatting to anyone
 
-You can see the Wireframes on the XD file attache on github
+You can see the Wireframes on the XD doc attached.
 
 
 
